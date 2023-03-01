@@ -181,12 +181,10 @@ func TestSetEnv(t *testing.T) {
 	}
 }
 
-// DOES NOT WORK
 func TestSetEnvByFile(t *testing.T) {
 	PackageOs.SetEnvByFile(".env")
 	expected := os.Getenv("ecla")
 	actual := PackageOs.GetEnv("ecla")
-	fmt.Println(expected)
 	if expected != actual {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}

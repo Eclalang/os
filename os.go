@@ -1,8 +1,8 @@
 package os
 
 import (
-	"fmt"
 	"os"
+	"strings"
 )
 
 // Chown changes the owner and group of the file
@@ -126,10 +126,11 @@ func SetEnv(key string, value string) {
 	os.Setenv(key, value)
 }
 
-// NEEDS FIXING
+// SetEnvByFile sets an environment variable by reading a file
 func SetEnvByFile(filename string) {
-	str := os.Getenv(filename)
-	fmt.Println(str)
+	str := ReadFile(filename)
+	splited := strings.Split(str, "=")
+	os.Setenv(splited[0], splited[1])
 }
 
 // UnsetEnv unsets an environment variable
