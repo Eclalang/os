@@ -1,6 +1,6 @@
-## OS LIBRARY FOR ECLA
+# OS library
 
-# Candidate functions :
+## Candidate functions :
 
 |   Func Name    |                   Prototype                   |                             Description                              |         Comments          |
 |:--------------:|:---------------------------------------------:|:--------------------------------------------------------------------:|:-------------------------:|
