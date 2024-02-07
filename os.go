@@ -127,10 +127,17 @@ func SetEnv(key string, value string) {
 }
 
 // SetEnvByFile sets an environment variable by reading a file
-func SetEnvByFile(filename string) {
+func SetEnvByFile(filename string) error {
 	str := ReadFile(filename)
+	if str == "" {
+		return nil
+	}
 	splited := strings.Split(str, "=")
-	os.Setenv(splited[0], splited[1])
+	err := os.Setenv(splited[0], splited[1])
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // UnsetEnv unsets an environment variable
