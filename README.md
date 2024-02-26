@@ -23,6 +23,6 @@
 |     Remove     |          Remove(filename string) {}           |                            Removes a file                            |            N/A            |
 |   RemoveAll    |           RemoveAll(path string) {}           |               Removes a directory and all its contents               |            N/A            |
 |     SetEnv     |      SetEnv(key string, value string) {}      |                     Sets an environment variable                     |            N/A            |
-|  SetEnvByFile  |       SetEnvByFile(filename string) {}        |            Sets an environment variable by reading a file            | Uses the format key=value |
+|  SetEnvByFile  |    SetEnvByFile(filename string) error {}     |            Sets an environment variable by reading a file            | Uses the format key=value |
 |    UnsetEnv    |            UnsetEnv(key string) {}            |                    Unsets an environment variable                    |            N/A            |
 |   WriteFile    | WriteFile(filename string, content string) {} |                 Writes a file with the given content                 |            N/A            |
