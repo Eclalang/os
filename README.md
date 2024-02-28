@@ -1,5 +1,8 @@
 # OS library
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Eclalang/os)](https://goreportcard.com/report/github.com/Eclalang/os)
+[![codecov](https://codecov.io/gh/Eclalang/os/graph/badge.svg?token=YNCIYERVBO)](https://codecov.io/gh/Eclalang/os)
+
 ## Candidate functions :
 
 |   Func Name    |                   Prototype                   |                             Description                              |         Comments          |

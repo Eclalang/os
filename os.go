@@ -47,10 +47,7 @@ func Getgid() int {
 
 // GetHostname gets the hostname of the machine
 func GetHostname() string {
-	name, err := os.Hostname()
-	if err != nil {
-		return ""
-	}
+	name, _ := os.Hostname()
 	return name
 }
 
@@ -71,10 +68,7 @@ func Getuid() int {
 
 // GetUserHomeDir gets the home directory of the current user
 func GetUserHomeDir() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return ""
-	}
+	home, _ := os.UserHomeDir()
 	return home
 }
 
@@ -86,7 +80,7 @@ func Getwd() string {
 
 // Mkdir creates a new directory
 func Mkdir(name string) {
-	os.Mkdir(name, 0755)
+	os.Mkdir(name, 0750)
 }
 
 // ReadDir reads a directory and returns the names of the files and directories
@@ -132,10 +126,11 @@ func SetEnvByFile(filename string) error {
 	if str == "" {
 		return nil
 	}
-	splited := strings.Split(str, "=")
-	err := os.Setenv(splited[0], splited[1])
-	if err != nil {
-		return err
+	for _, line := range strings.Split(str, "\n") {
+		if strings.Contains(line, "=") {
+			part := strings.Split(line, "=")
+			os.Setenv(part[0], part[1])
+		}
 	}
 	return nil
 }
@@ -147,10 +142,7 @@ func UnsetEnv(key string) {
 
 // WriteFile writes a file with the given content
 func WriteFile(filename string, content string) {
-	file, err := os.Create(filename)
-	if err != nil {
-		return
-	}
-	defer file.Close()
+	file, _ := os.Create(filename)
 	file.WriteString(content)
+	file.Close()
 }
