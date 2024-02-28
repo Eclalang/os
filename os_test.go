@@ -43,15 +43,16 @@ func TestCreate(t *testing.T) {
 	}
 
 	working = false
-	Create("unit_test_files/no???extension")
+	fileName := "no??/?extension"
+	Create("unit_test_files/" + fileName)
 	files = ReadDir("unit_test_files/")
 	for _, file := range files {
-		if file == "no???extension" {
+		if file == fileName {
 			working = true
 		}
 	}
 	if working {
-		t.Error("Did not expect to create a file named no???extension, but it was found")
+		t.Errorf("Did not expect to create a file named %s, but it was found", fileName)
 	}
 }
 

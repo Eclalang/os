@@ -3,6 +3,8 @@ package os
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"runtime"
 	"strings"
 )
 
@@ -18,10 +20,21 @@ func ClearEnv() {
 
 // Create creates a file and returns the file object
 func Create(name string) {
-	file, err := os.Create(name)
-	if err != nil {
-		return
+	if runtime.GOOS == "windows" {
+		patternWindows := "<>:\"/\\|[?][*]"
+		matched, _ := regexp.MatchString(patternWindows, name)
+		if matched {
+			return
+		}
+	} else if runtime.GOOS == "linux" {
+		patternUnix := "/"
+		matched, _ := regexp.MatchString(patternUnix, name)
+		if matched {
+			return
+		}
 	}
+
+	file, _ := os.Create(name)
 	file.Close()
 	return
 }
@@ -69,11 +82,7 @@ func Getuid() int {
 
 // GetUserHomeDir gets the home directory of the current user
 func GetUserHomeDir() string {
-	home, err := os.UserHomeDir()
-	fmt.Println(home)
-	if err != nil {
-		return ""
-	}
+	home, _ := os.UserHomeDir()
 	return home
 }
 
