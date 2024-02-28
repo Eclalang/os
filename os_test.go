@@ -7,10 +7,12 @@ import (
 )
 
 func TestChown(t *testing.T) {
-	Chown("unit_test_files/test.txt", 0, 0)
-	uid := Getuid()
-	gid := Getgid()
-	if uid != 0 || gid != 0 {
+	oldUid := Getuid()
+	oldGid := Getgid()
+	Chown("unit_test_files/test.txt", 3, 3)
+	newUid := Getuid()
+	newGid := Getgid()
+	if oldUid != newUid || oldGid != newGid {
 		t.Error("Expected uid and gid to change, but it did not")
 	}
 }
