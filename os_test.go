@@ -158,6 +158,11 @@ func TestReadDir(t *testing.T) {
 	if !reflect.DeepEqual(expected, actual) {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
+
+	actualCrash := ReadDir("unit_test_not_exist/")
+	if actualCrash != nil {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
 }
 
 func TestReadFile(t *testing.T) {
@@ -165,6 +170,11 @@ func TestReadFile(t *testing.T) {
 	expected := string(expect)
 	actual := ReadFile("unit_test_files/test.txt")
 	if expected != actual {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
+
+	actualCrash := ReadFile("unit_test_files/notexist.txt")
+	if actualCrash != "" {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
 }
@@ -211,6 +221,17 @@ func TestSetEnvByFile(t *testing.T) {
 	if expected != actual {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
+
+	err = SetEnvByFile("unit_test_files/empty.env")
+	if err != nil {
+		t.Errorf("Expected nil, got %s", err)
+	}
+
+	err = SetEnvByFile("unit_test_files/error.env")
+	if err != nil {
+		t.Errorf("Expected an error, got %v", err)
+	}
+
 }
 
 func TestUnsetEnv(t *testing.T) {

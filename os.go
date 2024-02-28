@@ -1,10 +1,7 @@
 package os
 
 import (
-	"fmt"
 	"os"
-	"regexp"
-	"runtime"
 	"strings"
 )
 
@@ -20,21 +17,10 @@ func ClearEnv() {
 
 // Create creates a file and returns the file object
 func Create(name string) {
-	if runtime.GOOS == "windows" {
-		patternWindows := "<>:\"/\\|[?][*]"
-		matched, _ := regexp.MatchString(patternWindows, name)
-		if matched {
-			return
-		}
-	} else if runtime.GOOS == "linux" {
-		patternUnix := "/"
-		matched, _ := regexp.MatchString(patternUnix, name)
-		if matched {
-			return
-		}
+	file, err := os.Create(name)
+	if err != nil {
+		return
 	}
-
-	file, _ := os.Create(name)
 	file.Close()
 	return
 }
@@ -94,11 +80,7 @@ func Getwd() string {
 
 // Mkdir creates a new directory
 func Mkdir(name string) {
-	err := os.Mkdir(name, 0750)
-	if err != nil {
-		fmt.Println("Error creating directory")
-		return
-	}
+	os.Mkdir(name, 0750)
 }
 
 // ReadDir reads a directory and returns the names of the files and directories
@@ -144,10 +126,11 @@ func SetEnvByFile(filename string) error {
 	if str == "" {
 		return nil
 	}
-	splited := strings.Split(str, "=")
-	err := os.Setenv(splited[0], splited[1])
-	if err != nil {
-		return err
+	for _, line := range strings.Split(str, "\n") {
+		if strings.Contains(line, "=") {
+			part := strings.Split(line, "=")
+			os.Setenv(part[0], part[1])
+		}
 	}
 	return nil
 }
@@ -159,10 +142,7 @@ func UnsetEnv(key string) {
 
 // WriteFile writes a file with the given content
 func WriteFile(filename string, content string) {
-	file, err := os.Create(filename)
-	if err != nil {
-		return
-	}
-	defer file.Close()
+	file, _ := os.Create(filename)
 	file.WriteString(content)
+	file.Close()
 }
