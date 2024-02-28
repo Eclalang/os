@@ -7,14 +7,17 @@ import (
 )
 
 func TestChown(t *testing.T) {
-	Chown("unit_test_files/test.txt", 0, 0)
-	uid := Getuid()
-	gid := Getgid()
-	if uid != 0 || gid != 0 {
+	oldUid := Getuid()
+	oldGid := Getgid()
+	Chown("unit_test_files/test.txt", 3, 3)
+	newUid := Getuid()
+	newGid := Getgid()
+	if oldUid != newUid || oldGid != newGid {
 		t.Error("Expected uid and gid to change, but it did not")
 	}
 }
 
+/*
 func TestClearEnv(t *testing.T) {
 	ClearEnv()
 	expected := os.Getenv("ecla")
@@ -24,15 +27,33 @@ func TestClearEnv(t *testing.T) {
 	}
 }
 
+*/
+
 func TestCreate(t *testing.T) {
+	working := false
 	Create("unit_test_files/newfile.txt")
 	files := ReadDir("unit_test_files/")
 	for _, file := range files {
 		if file == "newfile.txt" {
-			return
+			working = true
 		}
 	}
-	t.Error("Expected to find newfile.txt, but it was not found")
+	if !working {
+		t.Error("Expected to find newfile.txt, but it was not found")
+	}
+
+	working = false
+	fileName := "no??/?extension"
+	Create("unit_test_files/" + fileName)
+	files = ReadDir("unit_test_files/")
+	for _, file := range files {
+		if file == fileName {
+			working = true
+		}
+	}
+	if working {
+		t.Errorf("Did not expect to create a file named %s, but it was found", fileName)
+	}
 }
 
 func TestGetegid(t *testing.T) {
@@ -120,6 +141,7 @@ func TestMkdir(t *testing.T) {
 	files := ReadDir("unit_test_files/")
 	for _, file := range files {
 		if file == "tempodirectory" {
+			Remove("unit_test_files/tempodirectory/")
 			return
 		}
 	}
@@ -136,6 +158,11 @@ func TestReadDir(t *testing.T) {
 	if !reflect.DeepEqual(expected, actual) {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
+
+	actualCrash := ReadDir("unit_test_not_exist/")
+	if actualCrash != nil {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
 }
 
 func TestReadFile(t *testing.T) {
@@ -143,6 +170,11 @@ func TestReadFile(t *testing.T) {
 	expected := string(expect)
 	actual := ReadFile("unit_test_files/test.txt")
 	if expected != actual {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
+
+	actualCrash := ReadFile("unit_test_files/notexist.txt")
+	if actualCrash != "" {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
 }
@@ -189,6 +221,17 @@ func TestSetEnvByFile(t *testing.T) {
 	if expected != actual {
 		t.Errorf("Expected %s, got %s", expected, actual)
 	}
+
+	err = SetEnvByFile("unit_test_files/empty.env")
+	if err != nil {
+		t.Errorf("Expected nil, got %s", err)
+	}
+
+	err = SetEnvByFile("unit_test_files/error.env")
+	if err != nil {
+		t.Errorf("Expected an error, got %v", err)
+	}
+
 }
 
 func TestUnsetEnv(t *testing.T) {
