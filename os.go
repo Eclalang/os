@@ -1,6 +1,7 @@
 package os
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -47,10 +48,7 @@ func Getgid() int {
 
 // GetHostname gets the hostname of the machine
 func GetHostname() string {
-	name, err := os.Hostname()
-	if err != nil {
-		return ""
-	}
+	name, _ := os.Hostname()
 	return name
 }
 
@@ -72,6 +70,7 @@ func Getuid() int {
 // GetUserHomeDir gets the home directory of the current user
 func GetUserHomeDir() string {
 	home, err := os.UserHomeDir()
+	fmt.Println(home)
 	if err != nil {
 		return ""
 	}
@@ -86,7 +85,11 @@ func Getwd() string {
 
 // Mkdir creates a new directory
 func Mkdir(name string) {
-	os.Mkdir(name, 0755)
+	err := os.Mkdir(name, 0750)
+	if err != nil {
+		fmt.Println("Error creating directory")
+		return
+	}
 }
 
 // ReadDir reads a directory and returns the names of the files and directories

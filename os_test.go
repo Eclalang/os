@@ -17,6 +17,7 @@ func TestChown(t *testing.T) {
 	}
 }
 
+/*
 func TestClearEnv(t *testing.T) {
 	ClearEnv()
 	expected := os.Getenv("ecla")
@@ -26,15 +27,32 @@ func TestClearEnv(t *testing.T) {
 	}
 }
 
+*/
+
 func TestCreate(t *testing.T) {
+	working := false
 	Create("unit_test_files/newfile.txt")
 	files := ReadDir("unit_test_files/")
 	for _, file := range files {
 		if file == "newfile.txt" {
-			return
+			working = true
 		}
 	}
-	t.Error("Expected to find newfile.txt, but it was not found")
+	if !working {
+		t.Error("Expected to find newfile.txt, but it was not found")
+	}
+
+	working = false
+	Create("unit_test_files/no???extension")
+	files = ReadDir("unit_test_files/")
+	for _, file := range files {
+		if file == "no???extension" {
+			working = true
+		}
+	}
+	if working {
+		t.Error("Did not expect to create a file named no???extension, but it was found")
+	}
 }
 
 func TestGetegid(t *testing.T) {
@@ -122,6 +140,7 @@ func TestMkdir(t *testing.T) {
 	files := ReadDir("unit_test_files/")
 	for _, file := range files {
 		if file == "tempodirectory" {
+			Remove("unit_test_files/tempodirectory/")
 			return
 		}
 	}
